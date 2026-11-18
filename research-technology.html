@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Technology &amp; Engineering · OSiV</title>
+  <meta name="description" content="We build AI systems that stay reliable when their inputs are uncertain: perception that makes mistakes, memories that must be searched with vague cues, and cities observed through sparse sensors.">
+  <link rel="preload" href="assets/fonts/inter-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+<main id="research" class="direction">
+  <p class="crumbs"><a href="research.html">Research</a> / Technology &amp; Engineering</p>
+  <h1>Technology &amp; Engineering</h1>
+  <p class="statement">We build AI systems that stay reliable when their inputs are uncertain: perception that makes mistakes, memories that must be searched with vague cues, and cities observed through sparse sensors.</p>
+  <p class="intro">Technology research at OSiV is carried out with our partner group ViSO. The common thread is structure and calibrated uncertainty: instead of trusting one prediction, our systems keep structured records with confidences and let reliable evidence outweigh unreliable evidence.</p>
+  <p class="intro">We work on video understanding, memory for AI agents and spatio-temporal learning, and evaluate on public benchmarks with controlled noise so that robustness can be measured, not assumed.</p>
+
+  <h2>Research themes</h2>
+  <section class="theme">
+    <div class="ph fig"><img src="papers/static/images/fig1_overview.png" alt="" loading="lazy"></div>
+    <div>
+      <span class="venue">Theme 1</span>
+      <h3>Video event understanding under perceptual uncertainty</h3>
+      <p class="rq">How can a retrieval system keep finding events when detectors, trackers and action classifiers make mistakes?</p>
+      <p>Long videos are summarised as structured events (time, location, actor, action). We treat the correctness of each attribute as a latent variable and calibrate its confidence, so one misrecognised cue no longer discards an event.</p>
+      <ul class="rel"><li><a href="papers/index.html">Probabilistic Structured Event Modeling for Video Event Recognition under Perceptual Uncertainty</a></li></ul>
+    </div>
+  </section>
+  <section class="theme">
+    <div class="ph fig"><img src="papers/structured-episodic-retrieval/static/images/fig1_rules.png" alt="" loading="lazy"></div>
+    <div>
+      <span class="venue">Theme 2</span>
+      <h3>Structured memory for AI agents</h3>
+      <p class="rq">What makes structured episodic retrieval robust when the query cues themselves are noisy?</p>
+      <p>LLM agents need to recall past episodes from partial and sometimes wrong cues. We study, under controlled noise, how confidence-aware matching across several memory axes compares with strict matching and embedding search.</p>
+      <ul class="rel"><li><a href="papers/structured-episodic-retrieval/">What Makes Structured Episodic Retrieval Robust to Noisy Query Cues? A Controlled Study</a></li></ul>
+    </div>
+  </section>
+  <section class="theme">
+    <div class="ph"><img src="papers/24h-gnn/static/images/fig2b_taxi_heatmap.jpg" alt="" loading="lazy"></div>
+    <div>
+      <span class="venue">Theme 3</span>
+      <h3>City-scale spatio-temporal learning</h3>
+      <p class="rq">How can sparse road sensors and dense vehicle trajectories be combined to predict traffic across a whole city?</p>
+      <p>Graph neural networks fuse loop-detector data with taxi GPS trajectories; pattern-driven pseudo-labels fill in roads that have no sensor.</p>
+      <ul class="rel"><li><a href="papers/24h-gnn/">24H-GNN: A Pattern-Driven Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction</a></li></ul>
+    </div>
+  </section>
+
+  <h2>Publications</h2>
+  <section class="pubgroup">
+    <div class="yr">2026</div>
+    <ul class="pblt">
+      <li>
+        <a class="thumb fig" href="papers/structured-episodic-retrieval/"><img src="papers/structured-episodic-retrieval/static/images/fig1_rules.png" alt="" loading="lazy"></a>
+        <div class="text">
+          <h3><a href="papers/structured-episodic-retrieval/">What Makes Structured Episodic Retrieval Robust to Noisy Query Cues? A Controlled Study</a></h3>
+          <div class="au">Authors withheld during review</div>
+          <div class="ve">Under review, 2026</div>
+          <ul class="options"><li><a href="papers/structured-episodic-retrieval/">project page</a></li></ul>
+        </div>
+      </li>
+      <li>
+        <a class="thumb fig" href="papers/index.html"><img src="papers/static/images/fig1_overview.png" alt="" loading="lazy"></a>
+        <div class="text">
+          <h3><a href="papers/index.html">Probabilistic Structured Event Modeling for Video Event Recognition under Perceptual Uncertainty</a></h3>
+          <div class="au">Nhan Thanh Ho, Anh Dong Nguyen, Thuan Duc Tran, Thang Van Nguyen, Bui Anh Thinh, Nguyen Bao Tran, Long Nhat Ho</div>
+          <div class="ve">Asian Conference on Computer Vision (ACCV) 2026<span class="grp">ViSO</span></div>
+          <ul class="options"><li><a href="papers/index.html">project page</a></li><li><a href="papers/static/pdf/paper.pdf">pdf</a></li></ul>
+        </div>
+      </li>
+      <li>
+        <a class="thumb" href="papers/24h-gnn/"><img src="papers/24h-gnn/static/images/fig2b_taxi_heatmap.jpg" alt="" loading="lazy"></a>
+        <div class="text">
+          <h3><a href="papers/24h-gnn/">24H-GNN: A Pattern-Driven Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction</a></h3>
+          <div class="au">Thanh Nhan Ho, Dong Anh Nguyen, Minh Tai Pham Nguyen, Minh Khue Phan Tran, Hoang Minh Nguyen, Nguyen Bao Tran, Trong Nhan Le</div>
+          <div class="ve">International Conference on Intelligent Systems and Networks (ICISN) 2026</div>
+          <ul class="options"><li><a href="papers/24h-gnn/">project page</a></li><li><a href="papers/24h-gnn/static/pdf/paper.pdf">pdf</a></li></ul>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <h2>Topics</h2>
+  <ul class="tags"><li>computer vision</li><li>video event retrieval</li><li>uncertainty calibration</li><li>isotonic regression</li><li>structured event memory</li><li>LLM agents</li><li>episodic memory</li><li>retrieval</li><li>graph neural networks</li><li>spatio-temporal forecasting</li><li>pseudo-labelling</li><li>intelligent transportation</li></ul>
+
+  <p class="crumbs" style="margin-top:40px">See also: <a href="research-society.html">Economics, Culture &amp; Society</a></p>
+</main>
+</body>
+</html>

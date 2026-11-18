@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probabilistic Structured Event Modeling for Video Event Recognition under Perceptual Uncertainty</title>
+  <meta name="description" content="Probabilistic structured event memory for video event retrieval under perceptual uncertainty. ACCV 2026.">
+  <meta property="og:title" content="Probabilistic Structured Event Modeling for Video Event Recognition under Perceptual Uncertainty">
+  <meta property="og:image" content="static/images/fig1_overview.png">
+  <link rel="preload" href="static/fonts/inter-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="static/css/main.css?v=5">
+</head>
+<body>
+<main>
+
+  <div id="top">
+    <h1>Probabilistic Structured Event Modeling</h1>
+    <h2 class="sttl">Video Event Recognition under Perceptual Uncertainty</h2>
+    <span class="venue">Asian Conference on Computer Vision (ACCV)&nbsp;2026</span>
+
+    <div class="authors">
+      <span class="nw">Nhan Thanh Ho<sup>1,*</sup>,</span>
+      <span class="nw">Anh Dong Nguyen<sup>2,*</sup>,</span>
+      <span class="nw">Thuan Duc Tran<sup>3,*,†</sup>,</span>
+      <span class="nw">Thang Van Nguyen<sup>1</sup>,</span>
+      <span class="nw">Bui Anh Thinh<sup>1</sup>,</span>
+      <span class="nw">Nguyen Bao Tran<sup>4</sup>,</span>
+      <span class="nw">and Long Nhat Ho<sup>5</sup></span>
+    </div>
+    <div class="affiliations">
+      <span><sup>1</sup>Faculty of Computer Science and Engineering, HCMUT – VNU-HCM</span>
+      <span><sup>2</sup>School of Industrial Management, HCMUT – VNU-HCM</span>
+      <span><sup>3</sup>Ho Chi Minh City University of Industry and Trade</span>
+      <span><sup>4</sup>Faculty of Mechanical Engineering, HCMUT – VNU-HCM</span>
+      <span><sup>5</sup>Van Lang University</span>
+    </div>
+    <p class="note">* Equal contribution &nbsp;·&nbsp; † Corresponding author</p>
+  </div>
+
+  <ul class="options">
+    <li><a href="static/pdf/paper.pdf">
+      <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24m129-55L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9"/></svg>
+      <span>PDF</span></a></li>
+    <li><span class="dsbl" title="Code release coming soon">
+      <svg viewBox="0 0 496 512" aria-hidden="true"><path d="M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8"/></svg>
+      <span>Code (soon)</span></span></li>
+    <li><a href="#qualitative">
+      <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M0 96c0-35.3 28.7-64 64-64h384c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64zm323.8 106.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6-26.5-33.1c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4S78.8 416 88 416h336c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96"/></svg>
+      <span>Examples</span></a></li>
+    <li><a href="#bibtex">
+      <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M0 216C0 149.7 53.7 96 120 96h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64zm256 0c0-66.3 53.7-120 120-120h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64h-64c-35.3 0-64-28.7-64-64z"/></svg>
+      <span>Cite</span></a></li>
+  </ul>
+
+  <section id="teaser">
+    <div class="wide">
+      <a class="fig-link" href="static/images/fig1_overview.png"><img src="static/images/fig1_overview.png" width="1672" height="891"
+        alt="Overview of the confidence-aware event retrieval pipeline."></a>
+    </div>
+    <p class="thsub">
+      Figure 1: Video observations are converted into structured events <i>E = (T, L, A, S)</i> — time, location, actor and action — through detection,
+      tracking and fixed-length track windows, and stored in an <i>ExplicitCell</i> memory with calibrated per-attribute confidences.
+      Deterministic Hard-AND retrieval discards an event after a single attribute mismatch; our probabilistic model lets uncertain attributes shrink
+      while reliable ones dominate, so the event is still retrieved.
+    </p>
+    <div class="keys">
+      <div><span class="n">3.3×</span><span class="l">higher Recall@5 than Hard-AND at the highest attribute noise (0.394 vs. 0.120, CAVIAR)</span></div>
+      <div><span class="n">0.552 → 0.000</span><span class="l">location-confidence calibration error after isotonic regression</span></div>
+      <div><span class="n">0.221 vs. 0.085</span><span class="l">Recall@5 on outdoor VIRAT at the highest noise, without recalibration</span></div>
+    </div>
+  </section>
+
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <div class="narrow">
+      <p>Long-duration video understanding systems summarize continuous observations as structured event representations to enable semantic retrieval.
+      However, these events are produced by imperfect perceptual pipelines (e.g., detectors, trackers, and action classifiers), meaning that every extracted attribute carries inherent uncertainty.
+      Existing retrieval frameworks often ignore this uncertainty, relying on deterministic hard matching that fails when a single cue is misrecognized, or on embedding-based retrieval methods that do not explicitly preserve structured event attributes, particularly spatial information.
+      This paper models structured events as probabilistic entities in which the correctness of each perceptual attribute is treated as a latent variable.
+      A marginal-likelihood retrieval formulation integrates attribute-level uncertainty, allowing reliable attributes to compensate for uncertain ones instead of discarding an event after a single erroneous observation.
+      For the spatial axis, detection covariance is propagated through the homography Jacobian to estimate uncertainty on the ground plane.</p>
+      <p>Evaluated on an uncertainty-driven event retrieval benchmark using both the indoor CAVIAR and outdoor VIRAT datasets, the framework consistently outperforms deterministic hard matching under increasing attribute noise, reaching 3.3× higher Recall@5 (0.394 vs. 0.120) at the highest corruption level.
+      Controlled ablations identify the per-event confidence as the operative signal precisely when perception is degraded, and delineate the boundary between robustness to attribute noise and failures caused by events missing from memory.</p>
+    </div>
+  </section>
+
+  <section id="reference">
+    <h2>Reference</h2>
+    <div class="narrow">
+      <p><span class="nw">Nhan Thanh Ho</span>, <span class="nw">Anh Dong Nguyen</span>, <span class="nw">Thuan Duc Tran</span>, <span class="nw">Thang Van Nguyen</span>,
+      <span class="nw">Bui Anh Thinh</span>, <span class="nw">Nguyen Bao Tran</span>, and <span class="nw">Long Nhat Ho</span>.
+      Probabilistic Structured Event Modeling for Video Event Recognition under Perceptual Uncertainty.
+      In <em>Proceedings of the Asian Conference on Computer Vision (ACCV)&nbsp;2026</em>.</p>
+    </div>
+  </section>
+
+  <section id="bibtex">
+    <h2>BibTeX citation</h2>
+    <div class="narrow">
+<pre class="bib">@inproceedings{ho2026probabilistic,
+  title     = {Probabilistic Structured Event Modeling for Video Event
+               Recognition under Perceptual Uncertainty},
+  author    = {Ho, Nhan Thanh and Nguyen, Anh Dong and Tran, Thuan Duc and
+               Nguyen, Thang Van and {Bui Anh Thinh} and {Nguyen Bao Tran} and
+               Ho, Long Nhat},
+  booktitle = {Asian Conference on Computer Vision (ACCV)},
+  year      = {2026}
+}</pre>
+    </div>
+  </section>
+
+  <section id="method">
+    <h2>Method</h2>
+    <figure class="mid">
+      <a class="fig-link" href="static/images/fig2_circuit.png"><img src="static/images/fig2_circuit.png" width="1793" height="877"
+        alt="CIRCUIT memory architecture and ExplicitCell representation."></a>
+      <figcaption>
+        Figure 2: CIRCUIT memory architecture. Detection (YOLOv8 + homography), tracking (ByteTrack) and action recognition feed unified event nodes —
+        <i>ExplicitCells</i> — that store each attribute together with a calibrated confidence and are indexed along temporal, topic, identity and spatial axes.
+        At query time every attribute is a latent-correctness observation, <i>P(q<sub>k</sub>|e<sub>k</sub>) = ĉ<sub>k</sub>·s<sub>k</sub> + (1 − ĉ<sub>k</sub>)·b<sub>k</sub></i>,
+        and events are ranked by the marginal likelihood <i>Σ<sub>k</sub> log P(q<sub>k</sub>|e<sub>k</sub>)</i>.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="results">
+    <h2>Results</h2>
+    <figure class="mid">
+      <a class="fig-link" href="static/images/fig_degradation.png"><img src="static/images/fig_degradation.png" width="1794" height="663"
+        alt="Recall@5 under increasing attribute noise and event omission on CAVIAR."></a>
+      <figcaption>
+        Figure 3: Recall@5 on CAVIAR (S+L+A queries) as perception degrades. (a) Under attribute noise our model degrades gracefully and reaches 3.3× the Recall@5 of Hard-AND at the highest level.
+        (b) When events are missing from memory, all methods converge — no retrieval rule can rank events that were never stored.
+      </figcaption>
+    </figure>
+    <figure class="mid">
+      <a class="fig-link" href="static/images/fig_clip_virat.png"><img src="static/images/fig_clip_virat.png" width="1794" height="598"
+        alt="Comparison with CLIP on CAVIAR and transfer to VIRAT."></a>
+      <figcaption>
+        Figure 4: (a) On clean CAVIAR, the structured model roughly doubles a CLIP appearance baseline on location-aware queries, while CLIP stays stronger on isolated action queries.
+        (b) Applied unchanged to outdoor VIRAT scenes, the model keeps its advantage (0.22 vs. 0.09 Recall@5 at the highest noise).
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="qualitative">
+    <h2>Qualitative example</h2>
+<!--QUAL-->
+    <div class="qual">
+      <div class="qhead">
+        <img src="static/images/qual/query.jpg" width="240" height="240" alt="Query example event">
+        <div>
+          <div class="qlabel">Query · CAVIAR “OneShopOneWait1cor”</div>
+          <div class="qtext">Find events where the same person (<code>track 12</code>) is
+            <code>browse</code> in zone <code>g00</code>. Memory holds 85 ExplicitCells of this clip,
+            7 of which are truly relevant. Stored attributes are corrupted with the paper's heaviest
+            noise level (s<sub>3</sub>, p = 0.6).</div>
+        </div>
+      </div>
+      <div class="qrow ours"><div class="who">Ours<span>marginal likelihood, Eq. (6)</span><span class="score">5 / 5</span><span>relevant in top-5</span></div><div class="card"><img src="static/images/qual/prob_1.jpg" width="240" height="240" loading="lazy" alt="Rank 1: event at 33.6–36.6 s (relevant)"><div class="meta"><div class="rk"><span>#1 · 34–37s</span><span class="ok">✓ relevant</span></div><div class="at "><span><span class="k">action</span> <span class="v">browse</span></span><span>0.96</span></div><div class="at cor"><span><span class="k">zone</span> <span class="v">g10</span></span><span>0.20</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.87</span></div></div></div><div class="card"><img src="static/images/qual/prob_2.jpg" width="240" height="240" loading="lazy" alt="Rank 2: event at 36.6–39.6 s (relevant)"><div class="meta"><div class="rk"><span>#2 · 37–40s</span><span class="ok">✓ relevant</span></div><div class="at "><span><span class="k">action</span> <span class="v">browse</span></span><span>0.77</span></div><div class="at cor"><span><span class="k">zone</span> <span class="v">g03</span></span><span>0.20</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.90</span></div></div></div><div class="card"><img src="static/images/qual/prob_3.jpg" width="240" height="240" loading="lazy" alt="Rank 3: event at 30.6–33.6 s (relevant)"><div class="meta"><div class="rk"><span>#3 · 31–34s</span><span class="ok">✓ relevant</span></div><div class="at "><span><span class="k">action</span> <span class="v">browse</span></span><span>0.77</span></div><div class="at cor"><span><span class="k">zone</span> <span class="v">g10</span></span><span>0.20</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.86</span></div></div></div><div class="card"><img src="static/images/qual/prob_4.jpg" width="240" height="240" loading="lazy" alt="Rank 4: event at 24.6–27.6 s (relevant)"><div class="meta"><div class="rk"><span>#4 · 25–28s</span><span class="ok">✓ relevant</span></div><div class="at "><span><span class="k">action</span> <span class="v">browse</span></span><span>0.83</span></div><div class="at "><span><span class="k">zone</span> <span class="v">g00</span></span><span>1.00</span></div><div class="at cor"><span><span class="k">track</span> <span class="v">26</span></span><span>0.18</span></div></div></div><div class="card"><img src="static/images/qual/prob_5.jpg" width="240" height="240" loading="lazy" alt="Rank 5: event at 39.6–42.6 s (relevant)"><div class="meta"><div class="rk"><span>#5 · 40–43s</span><span class="ok">✓ relevant</span></div><div class="at cor"><span><span class="k">action</span> <span class="v">inactive</span></span><span>0.13</span></div><div class="at cor"><span><span class="k">zone</span> <span class="v">g10</span></span><span>0.20</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.87</span></div></div></div></div>
+      <div class="qrow base"><div class="who">Hard-AND<span>deterministic, STEM-style</span><span class="score">1 / 5</span><span>relevant in top-5</span></div><div class="card"><img src="static/images/qual/hard_and_1.jpg" width="240" height="240" loading="lazy" alt="Rank 1: event at 42.6–45.6 s (not relevant)"><div class="meta"><div class="rk"><span>#1 · 43–46s</span><span class="no">✗ wrong</span></div><div class="at mis"><span><span class="k">action</span> <span class="v">moving</span></span><span>0.96</span></div><div class="at "><span><span class="k">zone</span> <span class="v">g00</span></span><span>1.00</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.91</span></div></div></div><div class="card"><img src="static/images/qual/hard_and_2.jpg" width="240" height="240" loading="lazy" alt="Rank 2: event at 12.6–15.6 s (not relevant)"><div class="meta"><div class="rk"><span>#2 · 13–16s</span><span class="no">✗ wrong</span></div><div class="at "><span><span class="k">action</span> <span class="v">browse</span></span><span>0.67</span></div><div class="at mis"><span><span class="k">zone</span> <span class="v">g10</span></span><span>1.00</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.81</span></div></div></div><div class="card"><img src="static/images/qual/hard_and_3.jpg" width="240" height="240" loading="lazy" alt="Rank 3: event at 6.6–9.6 s (not relevant)"><div class="meta"><div class="rk"><span>#3 · 7–10s</span><span class="no">✗ wrong</span></div><div class="at mis"><span><span class="k">action</span> <span class="v">moving</span></span><span>0.96</span></div><div class="at mis"><span><span class="k">zone</span> <span class="v">g20</span></span><span>0.95</span></div><div class="at "><span><span class="k">track</span> <span class="v">12</span></span><span>0.90</span></div></div></div><div class="card"><img src="static/images/qual/hard_and_4.jpg" width="240" height="240" loading="lazy" alt="Rank 4: event at 24.6–27.6 s (relevant)"><div class="meta"><div class="rk"><span>#4 · 25–28s</span><span class="ok">✓ relevant</span></div><div class="at "><span><span class="k">action</span> <span class="v">browse</span></span><span>0.83</span></div><div class="at "><span><span class="k">zone</span> <span class="v">g00</span></span><span>1.00</span></div><div class="at cor"><span><span class="k">track</span> <span class="v">26</span></span><span>0.18</span></div></div></div><div class="card"><img src="static/images/qual/hard_and_5.jpg" width="240" height="240" loading="lazy" alt="Rank 5: event at 11.6–14.5 s (not relevant)"><div class="meta"><div class="rk"><span>#5 · 12–15s</span><span class="no">✗ wrong</span></div><div class="at mis"><span><span class="k">action</span> <span class="v">moving</span></span><span>0.96</span></div><div class="at mis"><span><span class="k">zone</span> <span class="v">g10</span></span><span>1.00</span></div><div class="at cor"><span><span class="k">track</span> <span class="v">12</span></span><span>0.18</span></div></div></div></div>
+      <div class="legend">
+        <span><i class="l-q"></i>query</span><span><i class="l-ok"></i>relevant (ground truth)</span><span><i class="l-no"></i>not relevant</span>
+        <span><span class="t-cor">value</span> attribute corrupted by the benchmark</span><span><span class="t-mis">value</span> perceived mismatch</span>
+        <span>numbers = calibrated confidence ĉ</span>
+      </div>
+      <p class="thsub">Figure 5: Top-5 retrieval for one real query, produced by our evaluation code on the paper's
+        s<sub>3</sub> protocol (seed 4). No stored event matches all three cues, so Hard-AND falls back to ranking by
+        confidence and returns only one relevant event. Our model sees that each corrupted cue carries low
+        confidence, lets the remaining reliable cues decide, and all of its top-5 events are relevant.</p>
+    </div>
+<!--/QUAL-->
+  </section>
+
+</main>
+
+<footer>© 2026 The authors · Ho Chi Minh City University of Technology – VNU-HCM</footer>
+</body>
+</html>

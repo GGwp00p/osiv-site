@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>24H-GNN: A Pattern-Driven Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction</title>
+  <meta name="description" content="24H-GNN fuses sparse loop-detector data with abundant taxi GPS trajectories through cosine-similarity pseudo-labels and graph neural networks for city-wide 24-hour traffic flow prediction (hotspot@50 = 0.92, hotspot@100 = 0.97).">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="24H-GNN: Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction">
+  <meta property="og:description" content="Transfer supervision from loop-equipped road segments to trajectory-only segments with spatio-temporal pseudo-labels, then predict city-wide 24-hour flow with GNNs.">
+  <meta property="og:image" content="static/images/fig1_pipeline.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f62b0'/%3E%3Ccircle cx='9' cy='22' r='3' fill='white'/%3E%3Ccircle cx='16' cy='10' r='3' fill='white'/%3E%3Ccircle cx='24' cy='20' r='3' fill='white'/%3E%3Cpath d='M9 22l7-12 8 10' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../static/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<nav class="topnav" aria-label="Page sections">
+  <div class="inner">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#2f62b0"/><circle cx="9" cy="22" r="3" fill="#fff"/><circle cx="16" cy="10" r="3" fill="#fff"/><circle cx="24" cy="20" r="3" fill="#fff"/><path d="M9 22l7-12 8 10" fill="none" stroke="#fff" stroke-width="2"/></svg>
+      <b>24H-<span>GNN</span></b>
+    </a>
+    <ul>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#experiment">Experiment</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#bibtex">BibTeX</a></li>
+      <li><a href="#related">Related</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <header class="hero col" id="top">
+    <h1>24H-<span>GNN</span></h1>
+    <h2 class="sub">A Pattern-Driven Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction</h2>
+    <span class="venue">Loop detectors + taxi GPS trajectories · San Francisco Bay Area</span>
+
+    <p class="authors">
+      <span class="au">Thanh Nhan Ho<sup>1</sup></span>
+      <span class="au">Dong Anh Nguyen<sup>2</sup></span>
+      <span class="au">Minh Tai Pham Nguyen<sup>3</sup></span>
+      <span class="au">Minh Khue Phan Tran<sup>4</sup></span>
+      <span class="au">Hoang Minh Nguyen<sup>5</sup></span>
+      <span class="au">Nguyen Bao Tran<sup>6</sup></span>
+      <span class="au">Trong Nhan Le<sup>1</sup></span>
+    </p>
+    <div class="affils">
+      <span><sup>1</sup>Faculty of Computer Science and Engineering, Ho Chi Minh City University of Technology</span>
+      <span><sup>2</sup>School of Industrial Management, Ho Chi Minh City University of Technology</span>
+      <span><sup>3</sup>Faculty of Advanced Program, Ho Chi Minh City Open University</span>
+      <span><sup>4</sup>Faculty of Information Technology, Ho Chi Minh City Open University</span>
+      <span><sup>5</sup>Faculty of Foreign Languages – Information Technology, Ho Chi Minh City University of Foreign Languages – Information Technology</span>
+      <span><sup>6</sup>Faculty of Mechanical Engineering, Ho Chi Minh City University of Technology</span>
+    </div>
+    <p class="contact">Ho Chi Minh City, Vietnam &nbsp;·&nbsp; <a href="mailto:nhan.honhanhocse@hcmut.edu.vn">nhan.honhanhocse@hcmut.edu.vn</a> &nbsp;·&nbsp; <a href="mailto:trongnhanle@hcmut.edu.vn">trongnhanle@hcmut.edu.vn</a></p>
+
+    <ul class="options">
+      <li><a href="static/pdf/paper.pdf" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+        PDF</a></li>
+      <li><span class="dsbl" title="Code release coming soon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
+        Code · soon</span></li>
+      <li><a href="#demo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 9-14 9z"/></svg>
+        Interactive demo</a></li>
+      <li><a href="#bibtex">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10H7z"/><path d="M4 4h10M4 4v10"/></svg>
+        BibTeX</a></li>
+    </ul>
+  </header>
+
+  <!-- Teaser -->
+  <section class="teaser wide" aria-label="Teaser">
+    <figure class="fig" style="max-width:860px;margin-inline:auto">
+      <div class="frame">
+        <img src="static/images/fig1_pipeline.png" width="1437" height="690"
+             alt="Pipeline of 24H-GNN: multimodal data goes through preprocessing and alignment, pseudo-label generation, feature construction, a fusion or baseline graph module, and finally prediction and hotspot ranking.">
+      </div>
+      <figcaption class="cap"><b>Figure 1:</b> Overall pipeline of the proposed 24H-GNN framework. It comprises (1) multimodal data preprocessing and spatial alignment, (2) cosine-similarity-based pseudo-label generation with spatio-temporal feature construction, and (3) fusion or baseline graph modules followed by a prediction head for traffic flow estimation and hotspot detection.</figcaption>
+    </figure>
+
+    <div class="keys" role="list">
+      <div class="key" role="listitem"><div class="num">0.92</div><div class="lbl">hotspot@50 — Fusion-MultiScaleGNN (best baseline: 0.84)</div></div>
+      <div class="key" role="listitem"><div class="num">0.97</div><div class="lbl">hotspot@100 — Fusion-GraphSAGE (best baseline: 0.93)</div></div>
+      <div class="key" role="listitem"><div class="num">838</div><div class="lbl">road segments with a full 24-hour fused pattern</div></div>
+      <div class="key" role="listitem"><div class="num">K = 5</div><div class="lbl">most-similar loop-equipped neighbours per segment</div></div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section id="abstract" class="col">
+    <h2>Abstract</h2>
+    <p class="abstract">
+      Urban traffic flow prediction is essential for effective transportation management but remains challenging due to heterogeneous and spatially inconsistent data sources.
+      We propose a pseudo-label fusion framework that integrates loop detector data and taxi GPS trajectories using spatio-temporal similarity.
+      Graph neural networks (GNNs) are employed to model network dependencies, while an adaptive fusion strategy balances reliable sensor data and trajectory-based estimates.
+      The proposed approach achieves strong hotspot detection performance (hotspot@50 = 0.92, hotspot@100 = 0.97) and consistently outperforms baseline models, particularly under limited supervision.
+      The framework enables scalable city-wide traffic estimation through multi-source data integration.
+    </p>
+
+    <h3>At a glance</h3>
+    <div class="glance">
+      <div><span class="tag">Problem</span><p>Loop detectors are accurate but sparse; taxi trajectories are abundant but noisy, biased, and unlabeled.</p></div>
+      <div><span class="tag">Idea</span><p>Give every trajectory-only segment a pseudo-label borrowed from its K = 5 most similar loop-equipped segments.</p></div>
+      <div><span class="tag">Fusion</span><p>Blend pseudo-label and taxi profile: ỹ = 0.7 · y<sup>pseudo</sup> + 0.3 · p<sup>taxi</sup>, then learn with GNNs.</p></div>
+      <div><span class="tag">Outcome</span><p>Best hotspot@50 (0.92) and hotspot@100 (0.97) among all compared models on 838 segments.</p></div>
+    </div>
+
+    <h3>Contributions</h3>
+    <ul class="contrib">
+      <li><b>Pseudo-label transfer from sparse sensors.</b> Supervision flows from loop-equipped segments to trajectory-only segments via cosine similarity between normalized 24-hour patterns.</li>
+      <li><b>Adaptive multi-source fusion.</b> Reliable sensor-derived pseudo-labels are blended with trajectory-based profiles (α = 0.7), preserving both stability and local real-world deviations.</li>
+      <li><b>City-wide GNN prediction and hotspot ranking.</b> The fused representation lets GNNs reconstruct a full-city 24-hour profile, evaluated against ASTGCN, DCRNN, STGCN, GCN, GraphSAGE, and STGFormer.</li>
+    </ul>
+  </section>
+
+  <section id="reference" class="col">
+    <h2>Reference</h2>
+    <p class="ref" style="text-align:center">Thanh Nhan Ho, Dong Anh Nguyen, Minh Tai Pham Nguyen, Minh Khue Phan Tran, Hoang Minh Nguyen, Nguyen Bao Tran, and Trong Nhan Le.
+      <b>24H-GNN: A Pattern-Driven Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction.</b></p>
+  </section>
+
+  <section id="bibtex" class="col">
+    <h2>BibTeX citation</h2>
+    <div class="bib">
+      <button class="copy" type="button" id="copyBib" aria-label="Copy BibTeX to clipboard">Copy</button>
+<pre id="bibText">@misc{ho2026_24hgnn,
+  title  = {24H-GNN: A Pattern-Driven Pseudo-Label Fusion Graph Network
+            for City-Wide Traffic Flow Prediction},
+  author = {Ho, Thanh Nhan and Nguyen, Dong Anh and Nguyen, Minh Tai Pham and
+            Tran, Minh Khue Phan and Nguyen, Hoang Minh and Tran, Nguyen Bao and
+            Le, Trong Nhan},
+  year   = {2026}
+}</pre>
+    </div>
+  </section>
+
+  <!-- Method -->
+  <section id="method" class="major">
+    <h2 class="stkt">Method</h2>
+    <div class="col">
+      <p class="lead">
+        Loop detectors are accurate but sparsely deployed, whereas taxi trajectories are abundant but noisy and biased — and carry no labels, so they cannot directly provide traffic density.
+        The framework turns this complementary pair into one reference-quality 24-hour dataset that covers the whole network, then trains graph models on top of it.
+      </p>
+
+      <div class="steps">
+        <div class="step c1"><h4>Data processing</h4><p>Multimodal data are preprocessed, map-matched to the road network, and normalized into 24-hour patterns.</p></div>
+        <div class="step c2"><h4>Pseudo-labels &amp; features</h4><p>Cosine-similarity pseudo-labels are generated and spatio-temporal features constructed.</p></div>
+        <div class="step c3"><h4>Graph learning</h4><p>A fusion or baseline graph module models dependencies across the road network.</p></div>
+        <div class="step c4"><h4>Prediction &amp; ranking</h4><p>A prediction head estimates 24-hour flow and ranks hotspots.</p></div>
+      </div>
+
+      <h3><span class="n">3.1</span>Fusion dataset with pseudo-labeling</h3>
+      <p>
+        Pseudo-labels are built at the <em>road-segment</em> level for taxi trajectories that have been map-matched onto the city's road network, then calibrated with loop-detector data at sensor locations.
+        For each segment <em>j</em> without a detector, the <b>K = 5</b> loop-equipped segments <em>N<sub>K</sub>(j)</em> whose normalized 24-hour pattern <em>y<sub>i</sub><sup>loop</sup></em> is most similar to the trajectory-derived profile <em>p<sub>j</sub><sup>taxi</sup></em> are selected.
+        K = 5 balances local similarity against data sparsity.
+      </p>
+      <div class="algo">
+        <header>Pseudo-label generation for a trajectory-only segment j</header>
+        <ol>
+          <li>Normalize all loop and taxi flows into <b>24-hour patterns</b>; drop irregular days (holidays, special events).</li>
+          <li>Compute the cosine similarity <em>s<sub>i</sub></em> between <em>p<sub>j</sub><sup>taxi</sup></em> and every loop pattern <em>y<sub>i</sub><sup>loop</sup></em>, <em>i ∈ L</em>.</li>
+          <li>Keep the <b>top K = 5</b> loop-equipped segments as <em>N<sub>K</sub>(j)</em>.</li>
+          <li>Turn similarities into weights <em>w<sub>i</sub></em> that sum to one.</li>
+          <li>Return the weighted average of their loop patterns as <em>y<sub>j</sub><sup>pseudo</sup></em>.</li>
+        </ol>
+      </div>
+      <div class="eq">
+        <span class="eq-tag">(1)</span>
+        $$s_i=\cos\!\big(y_i^{\text{loop}},\,p_j^{\text{taxi}}\big),\qquad i\in L,\qquad |\mathcal{N}_K(j)|=5$$
+        <span class="eq-tag">(2)</span>
+        $$w_i=\frac{s_i}{\sum_{k\in\mathcal{N}_K(j)}s_k}$$
+        <span class="eq-tag">(3)</span>
+        $$\mathbf{y}_j^{\text{pseudo}}=\sum_{i\in\mathcal{N}_K(j)}w_i\,\mathbf{y}_i^{\text{loop}}$$
+      </div>
+      <p>
+        The weighted average becomes a pseudo-label: a reliable estimate of the traffic flow that the segment <em>would</em> exhibit if it were equipped with a sensor.
+        In this way, biased or incomplete data are transformed into reference-quality data suitable for machine learning, leveraging the inherent stability of traffic patterns.
+        Excluding irregular days keeps the pseudo-labels focused on stable, long-term behaviour.
+      </p>
+      <div class="note"><span class="lab">Reading</span>
+        <p>Because the patterns are normalized, cosine similarity compares the <em>shape</em> of the daily curve (when peaks occur) rather than absolute volume — a quiet street can borrow its label from a busy road that has the same daily rhythm. This is our interpretation of Eq. (1), not a claim made in the paper.</p>
+      </div>
+
+      <h3><span class="n">3.2</span>Merging the trajectory dataset</h3>
+      <p>
+        After pseudo-labels are assigned to all <b>838 road segments</b>, each segment is represented by two components: a relative traffic flow vector <em>p<sub>j</sub><sup>taxi</sup></em> and a pseudo-label <em>y<sub>j</sub><sup>pseudo</sup></em> derived from reliable sensor-based data. They are combined by an adjusted fusion operation:
+      </p>
+      <div class="eq">
+        <span class="eq-tag">(4)</span>
+        $$\tilde{y}_j=\alpha\cdot y_j^{\text{pseudo}}+(1-\alpha)\cdot p_j^{\text{taxi}},\qquad \alpha=0.7$$
+      </div>
+      <div class="chips">
+        <span class="chip"><b>α = 0.7</b> empirically chosen within [0.6, 0.8]</span>
+        <span class="chip"><b>y<sup>pseudo</sup></b> preserves the stability of sensor-based patterns</span>
+        <span class="chip"><b>p<sup>taxi</sup></b> reflects real-world variations and local deviations</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo -->
+  <section id="demo" class="col">
+    <h2>Interactive demo: from loop neighbours to a fused profile</h2>
+    <p class="kicker">
+      A toy illustration of Eqs. (1)–(4). The sensor-less segment has only a noisy, biased taxi profile (gold, dotted).
+      Three loop neighbours (grey) are weighted by cosine similarity into a pseudo-label (dashed). Drag α to move the fused profile (blue) between the two sources.
+    </p>
+    <div class="demo">
+      <div class="sims" id="simBox"></div>
+      <svg class="chart" id="fusionChart" viewBox="0 0 640 220" role="img" aria-label="Toy 24-hour flow profiles: three loop neighbours, the similarity-weighted pseudo-label, the taxi profile, and the fused profile."></svg>
+      <div class="legend">
+        <span><i style="background:#8fa3bb"></i>loop neighbours / pseudo-label</span>
+        <span><i style="background:#c98a1a"></i>taxi profile p<sup>taxi</sup></span>
+        <span><i style="background:#2f62b0;height:4px"></i>fused ỹ</span>
+      </div>
+      <div class="slider">
+        <label for="alpha"><span>Fusion coefficient α — weight on the pseudo-label</span> <output id="oAlpha">0.70</output></label>
+        <input type="range" id="alpha" min="0" max="1" step="0.01" value="0.70">
+      </div>
+      <div class="verdict" id="fusedTxt"></div>
+    </div>
+    <p class="tcap" style="margin-top:8px">Toy example for intuition only — synthetic profiles with K = 3 for readability (the paper uses K = 5); not data or an experiment from the paper.</p>
+  </section>
+
+  <!-- Experiment -->
+  <section id="experiment" class="major">
+    <h2 class="stkt">Experiment</h2>
+    <div class="col">
+      <h3><span class="n">4.1</span>Data sources</h3>
+      <p>Two sources that cover nearly the entire city but are not homogeneous are synthesized into one 24-hour pattern dataset.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Source</th><th class="txt">Dataset</th><th class="txt">Coverage</th><th class="txt">Role in 24H-GNN</th></tr></thead>
+          <tbody>
+            <tr><td>Loop detectors</td><td class="txt">LargeST (Greater Bay Area subset)</td><td class="txt">2,352 sensors · 2020 and 2021</td><td class="txt">Accurate but sparse — reference patterns for pseudo-labels</td></tr>
+            <tr><td>Taxi GPS trajectories</td><td class="txt">SFMTA Taxi Trips</td><td class="txt">All permitted taxi companies in the City and County of San Francisco</td><td class="txt">Abundant but noisy and biased — trajectory profile p<sup>taxi</sup></td></tr>
+            <tr class="ours"><td>Fused dataset</td><td class="txt">Pseudo-labeled + taxi</td><td class="txt">838 road segments</td><td class="txt">24-hour pattern ỹ per segment (α = 0.7)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tcap"><b>Table 1.</b> Data sources and the fused dataset.</p>
+    </div>
+
+    <div class="wide">
+      <figure class="fig" style="max-width:900px;margin-inline:auto">
+        <div class="frame">
+          <div class="fig-grid">
+            <figure>
+              <img src="static/images/fig2a_loop_detectors.jpg" width="899" height="1062" alt="Map of loop detector locations in the Bay Area, coloured by traffic volume: low, medium, high, or no data.">
+              <div class="sub">(a) Loop detectors location.</div>
+            </figure>
+            <figure>
+              <img src="static/images/fig2b_taxi_heatmap.jpg" width="1122" height="1036" alt="Heatmap of taxi trips concentrated in San Francisco and along the Bay Area corridors.">
+              <div class="sub">(b) Trajectory taxi trips heatmap.</div>
+            </figure>
+          </div>
+        </div>
+        <figcaption class="cap"><b>Figure 2:</b> Loop detectors and trajectory taxi dataset. Sensors blanket the wider Bay Area highway network, whereas taxi trips concentrate densely in San Francisco — the two sources are complementary.</figcaption>
+      </figure>
+    </div>
+
+    <div class="col">
+      <h3><span class="n">4.2</span>Training setup &amp; baselines</h3>
+      <div class="tablewrap" style="max-width:440px">
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Optimizer</td><td>Adam</td></tr>
+            <tr><td>Learning rate</td><td>1.0 × 10<sup>−4</sup></td></tr>
+            <tr><td>Number of neighbors (K)</td><td>5</td></tr>
+            <tr><td>Fusion coefficient (α)</td><td>0.7</td></tr>
+            <tr><td>Epochs</td><td>50</td></tr>
+            <tr><td>Batch size</td><td>10</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tcap"><b>Table 2.</b> Training and hyperparameter settings.</p>
+      <p>
+        <b>Baselines</b> (the main comparison set): ASTGCN, DCRNN, STGCN, GCN, GraphSAGE, and STGFormer — models that learn spatio-temporal interactions across road networks.
+        <b>Proposed:</b> Fusion-GraphSAGE and Fusion-MultiScaleGNN.
+        <b>Metrics:</b> R² for flow estimation and hotspot@50 / hotspot@100 for hotspot detection at two ranking thresholds.
+      </p>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section id="results" class="major">
+    <h2 class="stkt">Results</h2>
+    <div class="col">
+      <p class="lead">
+        The proposed fusion frameworks consistently outperform the baselines on hotspot detection, confirming the effectiveness of adaptive multi-source fusion.
+        Fusion-MultiScaleGNN is best at the smaller ranking threshold (hotspot@50 = 0.92), while Fusion-GraphSAGE is best at the larger one (hotspot@100 = 0.97) — complementary strengths in local and global congestion identification.
+      </p>
+
+      <div class="findings">
+        <div><div class="big">+0.08</div><p><b>hotspot@50</b> over the best baseline (GraphSAGE 0.84 → Fusion-MultiScaleGNN 0.92); Fusion-GraphSAGE also gains +0.04.</p></div>
+        <div><div class="big">+0.04</div><p><b>hotspot@100</b> over the best baseline (GraphSAGE 0.93 → Fusion-GraphSAGE 0.97); Fusion-MultiScaleGNN matches it at 0.93.</p></div>
+        <div><div class="big">0.82</div><p><b>R²</b> is highest for plain GraphSAGE; the fusion models stay close (0.81 and 0.79).</p></div>
+      </div>
+
+      <h3><span class="n">5.1</span>Explore the benchmark</h3>
+      <div class="tabs" role="group" aria-label="Choose metric">
+        <button class="tab" type="button" data-metric="r2" aria-pressed="false">R²</button>
+        <button class="tab" type="button" data-metric="h50" aria-pressed="true">hotspot@50</button>
+        <button class="tab" type="button" data-metric="h100" aria-pressed="false">hotspot@100</button>
+      </div>
+      <div class="bars" id="bars" aria-live="polite"></div>
+      <p class="tcap">Models are sorted by the selected metric; ★ marks the best value. Numbers are those of Table 3.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Method</th><th>R²</th><th>hotspot@50</th><th>hotspot@100</th></tr></thead>
+          <tbody>
+            <tr><td>ASTGCN</td><td>0.71</td><td>0.60</td><td>0.75</td></tr>
+            <tr><td>DCRNN</td><td>0.74</td><td>0.64</td><td>0.74</td></tr>
+            <tr><td>STGCN</td><td>0.76</td><td>0.68</td><td>0.74</td></tr>
+            <tr><td>GCN</td><td>0.75</td><td>0.62</td><td>0.70</td></tr>
+            <tr><td>GraphSAGE</td><td class="best">0.82</td><td>0.84</td><td>0.93</td></tr>
+            <tr><td>STGFormer</td><td>0.51</td><td>0.00</td><td>0.22</td></tr>
+            <tr class="ours sep"><td>Fusion-GraphSAGE (Ours)</td><td>0.81</td><td>0.88</td><td class="best">0.97</td></tr>
+            <tr class="ours"><td>Fusion-MultiScaleGNN (Ours)</td><td>0.79</td><td class="best">0.92</td><td>0.93</td></tr>
+            <tr class="delta"><td>Best Ours − best baseline</td><td class="neg">−0.01</td><td class="pos">+0.08</td><td class="pos">+0.04</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tcap"><b>Table 3.</b> Model performance metrics across different models (best per column in bold). The last row is computed from the table: best of our two models minus the best baseline in each column.</p>
+
+      <h3><span class="n">5.2</span>Reading the numbers</h3>
+      <ul class="contrib">
+        <li><b>Ranking, not just fitting.</b> Fusion mainly improves how well the most congested segments are identified (hotspot@k), while R² stays within 0.01–0.03 of GraphSAGE.</li>
+        <li><b>Two models, two scales.</b> MultiScaleGNN leads when ranking only 50 segments; GraphSAGE-based fusion leads at 100.</li>
+        <li><b>Weaker spatio-temporal baselines.</b> STGFormer reaches R² 0.51 with hotspot@50 of 0.00, while ASTGCN, DCRNN, STGCN, and GCN lie between 0.71 and 0.76 R².</li>
+      </ul>
+
+      <h3><span class="n">5.3</span>Hotspot visualization</h3>
+      <p>
+        Figure 3 compares ground-truth and predicted top-100 hotspots in the San Francisco Bay Area during the peak period (16–17 h).
+        Predicted locations are quite close to the actual congestion patterns and identify several key bottlenecks in downtown San Francisco and along key arterial routes — an essential capability for practical urban traffic management.
+        Drag the handle to compare.
+      </p>
+    </div>
+
+    <div class="wide">
+      <figure class="fig" style="max-width:760px;margin-inline:auto">
+        <div class="compare" id="cmp">
+          <img src="static/images/fig3a_gt_hotspots.png" width="659" height="490" alt="Ground-truth top 100 congestion hotspots over the San Francisco Bay Area.">
+          <img class="top" src="static/images/fig3b_pred_hotspots.png" width="661" height="490" alt="Predicted top 100 congestion hotspots over the San Francisco Bay Area.">
+          <span class="tag l">Ground truth</span><span class="tag r">Prediction</span>
+          <div class="handle"></div>
+          <input type="range" min="0" max="100" value="50" aria-label="Compare ground truth and predicted hotspots">
+        </div>
+        <figcaption class="cap"><b>Figure 3:</b> Results with top-100 hotspot detection at 16–17 hours. Left of the handle: ground-truth top-100 hotspots; right: prediction of top-100 hotspots.</figcaption>
+      </figure>
+    </div>
+
+    <div class="col">
+      <h3>Conclusion</h3>
+      <p>
+        This study proposes a pseudo-label fusion framework for city-wide traffic prediction. By integrating loop detector and trajectory data, the model effectively learns 24-hour traffic patterns and improves hotspot detection.
+        The spatio-temporal pseudo-labeling mechanism extends supervision to unlabeled regions, enabling scalable traffic estimation under limited ground-truth data.
+      </p>
+      <p class="tcap"><b>Acknowledgements.</b> This work is acknowledged by Ho Chi Minh City University of Technology – Vietnam National University and Ho Chi Minh City Open University, Vietnam.</p>
+    </div>
+  </section>
+
+  <!-- Related -->
+  <section id="related" class="col">
+    <h2>Related projects</h2>
+    <div class="related">
+      <a class="card" href="../index.html">
+        <h5>Probabilistic ExplicitCell</h5>
+        <div class="cover"><img src="../static/images/fig1_overview.png" alt="" loading="lazy"></div>
+        <div class="d">Probabilistic Structured Event Modeling for Video Event Recognition under Perceptual Uncertainty</div>
+        <div class="v">ACCV&nbsp;2026</div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="col">
+    <p><b>24H-GNN</b> · Pattern-Driven Pseudo-Label Fusion Graph Network for City-Wide Traffic Flow Prediction</p>
+    <p>Ho Chi Minh City University of Technology · Ho Chi Minh City Open University · Ho Chi Minh City University of Foreign Languages – Information Technology</p>
+    <p>© 2026 The authors. Figures and tables are reproduced from the paper.</p>
+  </div>
+</footer>
+
+<dialog id="lightbox" aria-label="Enlarged figure"><img alt=""></dialog>
+
+<script defer src="../static/vendor/katex/katex.min.js"></script>
+<script defer src="../static/vendor/katex/auto-render.min.js"></script>
+<script defer src="static/js/main.js"></script>
+</body>
+</html>

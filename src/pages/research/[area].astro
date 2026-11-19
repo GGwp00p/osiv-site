@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PubItem from '../../components/PubItem.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getPublications, getProjects } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const areas = await getCollection('research');
+  return areas.map((a) => ({ params: { area: a.id }, props: { area: a, other: areas.find((x) => x.id !== a.id) } }));
+}
+const { area, other } = Astro.props;
+const d = area.data;
+const allPubs = await getPublications();
+const pubBySlug = new Map(allPubs.map((p) => [p.id, p]));
+const allProjects = await getProjects();
+const projBySlug = new Map(allProjects.map((p) => [p.id, p]));
+const slugs = [...new Set(d.themes.flatMap((t) => t.projects))];
+const projects = allProjects.filter((p) => slugs.includes(p.id));
+const pubs = allPubs.filter((p) => p.data.area === area.id && p.data.listed !== false || p.id === 'episodic' && area.id === 'technology');
+const accepted = pubs.filter((p) => p.data.status === 'accepted');
+const later = pubs.filter((p) => p.data.status !== 'accepted');
+---
+<Base title={d.name} description={d.statement}>
+  <p class="crumbs"><a href="/research/">Research</a> / {d.name}</p>
+  <h1>{d.name}</h1>
+  <p class="statement">{d.statement}</p>
+  {d.narrative.map((p) => <p class="intro">{p}</p>)}
+
+  <h2>Research themes</h2>
+  {d.themes.map((t, i) => (
+    <section class="theme">
+      <div class={t.fig ? 'ph fig' : 'ph'}><img src={t.image} alt="" loading="lazy" /></div>
+      <div>
+        <span class="venue">Theme {i + 1}</span>
+        <h3>{t.title}</h3>
+        <p class="rq">{t.question}</p>
+        <p>{t.text}</p>
+        <ul class="rel">
+          {t.projects.map((s) => projBySlug.get(s) && <li><a href={`/projects/${s}/`}>{projBySlug.get(s)!.data.title}</a></li>)}
+          {t.papers.map((s) => {
+            const p = pubBySlug.get(s);
+            return p && <li>{p.data.href ? <a href={p.data.href}>{p.data.title}</a> : p.data.title}</li>;
+          })}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  {projects.length > 0 && (<>
+    <h2>Projects</h2>
+    <ul class="tiles">{projects.map((p) => <ProjectCard project={p} />)}</ul>
+  </>)}
+
+  <h2>Publications</h2>
+  {accepted.length > 0 && (
+    <section class="pubgroup"><div class="yr">2026</div><ul class="pblt">{accepted.map((p) => <PubItem pub={p} />)}</ul></section>
+  )}
+  {later.length > 0 && (
+    <section class="pubgroup"><div class="yr">Under review &amp; in preparation</div><ul class="pblt">{later.map((p) => <PubItem pub={p} />)}</ul></section>
+  )}
+
+  <h2>Topics</h2>
+  <ul class="tags">{d.topics.map((t) => <li>{t}</li>)}</ul>
+  <p class="crumbs" style="margin-top:40px">See also: <a href={`/research/${other!.id}/`}>{other!.data.name}</a></p>
+</Base>

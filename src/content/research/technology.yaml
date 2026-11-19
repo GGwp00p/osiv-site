@@ -1,0 +1,46 @@
+name: "Technology &amp; Engineering"
+order: 1
+statement: "We build AI systems that stay reliable when their inputs are uncertain: perception that makes mistakes, memories that must be searched with vague cues, and cities observed through sparse sensors."
+narrative:
+  - "Technology research at OSiV is carried out with our partner group ViSO. The common thread is structure and calibrated uncertainty: instead of trusting one prediction, our systems keep structured records with confidences and let reliable evidence outweigh unreliable evidence."
+  - "We work on video understanding, memory for AI agents and spatio-temporal learning, and evaluate on public benchmarks with controlled noise so that robustness can be measured, not assumed."
+image: "/img/themes/ai-city.jpg"
+blurb: "video understanding, memory for AI agents, city-scale traffic prediction"
+themes:
+  - title: "Video event understanding under perceptual uncertainty"
+    image: "/papers/static/images/fig1_overview.png"
+    fig: true
+    question: "How can a retrieval system keep finding events when detectors, trackers and action classifiers make mistakes?"
+    text: "Long videos are summarised as structured events (time, location, actor, action). We treat the correctness of each attribute as a latent variable and calibrate its confidence, so one misrecognised cue no longer discards an event."
+    projects: []
+    papers:
+      - "accv"
+  - title: "Structured memory for AI agents"
+    image: "/papers/structured-episodic-retrieval/static/images/fig1_rules.png"
+    fig: true
+    question: "What makes structured episodic retrieval robust when the query cues themselves are noisy?"
+    text: "LLM agents need to recall past episodes from partial and sometimes wrong cues. We study, under controlled noise, how confidence-aware matching across several memory axes compares with strict matching and embedding search."
+    projects: []
+    papers:
+      - "episodic"
+  - title: "City-scale spatio-temporal learning"
+    image: "/papers/24h-gnn/static/images/fig2b_taxi_heatmap.jpg"
+    fig: false
+    question: "How can sparse road sensors and dense vehicle trajectories be combined to predict traffic across a whole city?"
+    text: "Graph neural networks fuse loop-detector data with taxi GPS trajectories; pattern-driven pseudo-labels fill in roads that have no sensor."
+    projects: []
+    papers:
+      - "gnn"
+topics:
+  - "computer vision"
+  - "video event retrieval"
+  - "uncertainty calibration"
+  - "isotonic regression"
+  - "structured event memory"
+  - "LLM agents"
+  - "episodic memory"
+  - "retrieval"
+  - "graph neural networks"
+  - "spatio-temporal forecasting"
+  - "pseudo-labelling"
+  - "intelligent transportation"

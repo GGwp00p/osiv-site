@@ -1,0 +1,21 @@
+name: Check (no deploy)
+
+# Runs on every branch except main and on pull requests: type check, build, internal link check.
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: npm run links

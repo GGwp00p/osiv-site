@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  snap?: boolean; // home page: one screen per section
+}
+const { title, description = 'OSiV is a young research group in Ho Chi Minh City working on reliable AI and on the digital transformation of local economies, culture and heritage.', image = '/img/themes/ai-city.jpg', snap = false } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL(image, site.url).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="preload" href="/fonts/inter-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body class={snap ? 'snap' : undefined}>
+    <Header />
+    <main id={snap ? 'home' : undefined}><slot /></main>
+    <Footer />
+    <script>
+      // Click any image marked `zoomable` (or inside a .zoom button) to see it large. Esc, a click or × closes it.
+      const box = document.createElement('div');
+      box.className = 'lightbox';
+      box.hidden = true;
+      box.innerHTML = '<button class="lbclose" type="button" aria-label="Close">&times;</button><img alt=""><p></p>';
+      document.body.appendChild(box);
+      const big = box.querySelector('img') as HTMLImageElement;
+      const cap = box.querySelector('p') as HTMLElement;
+      const close = () => { box.hidden = true; document.body.classList.remove('lbopen'); };
+      document.addEventListener('click', (e) => {
+        const t = e.target as HTMLElement;
+        const z = t.closest('.zoom, img.zoomable');
+        if (z) {
+          const src = (z.tagName === 'IMG' ? z : z.querySelector('img')) as HTMLImageElement | null;
+          if (!src) return;
+          big.src = src.currentSrc || src.src; big.alt = src.alt; cap.textContent = src.alt;
+          box.hidden = false; document.body.classList.add('lbopen');
+          return;
+        }
+        if (!box.hidden && (t === box || t === big || t.closest('.lbclose'))) close();
+      });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden) close(); });
+    </script>
+  </body>
+</html>

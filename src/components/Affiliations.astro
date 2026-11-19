@@ -1,0 +1,15 @@
+---
+import { affiliations } from '../data/site';
+---
+<div class="marquee" aria-label="Affiliations">
+  {[0, 1].map((n) => (
+    <ul class="affil track" aria-hidden={n === 1 ? 'true' : undefined}>
+      {affiliations.map((a) => (
+        <li>
+          <div class="lg">{a.logo ? <img src={a.logo} alt={n === 0 ? `${a.name} logo` : ''} loading="lazy" /> : <b>{a.text}</b>}</div>
+          {a.name}<span>{a.sub}</span>
+        </li>
+      ))}
+    </ul>
+  ))}
+</div>

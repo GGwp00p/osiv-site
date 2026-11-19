@@ -1,0 +1,18 @@
+---
+import type { Project } from '../lib/content';
+interface Props { project: Project }
+const { project } = Astro.props;
+const p = project.data;
+const href = `/projects/${project.id}/`;
+---
+<li>
+  <a class="nb" href={href}>
+    <div class="ph">
+      <img src={p.image} alt="" loading="lazy" style={p.imagePosition ? `object-position:${p.imagePosition}` : undefined} />
+      <span class="tag">{p.place}</span>
+    </div>
+  </a>
+  <span class="venue">{p.status}</span>
+  <span class="thcap"><a href={href}>{p.title}</a></span>
+  <span class="thsub">{p.sub}</span>
+</li>

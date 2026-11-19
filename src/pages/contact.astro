@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Contact" description="How to reach OSiV.">
+  <h1>Contact</h1>
+  <p class="intro">Email is generally the most reliable way to reach us. Our official email and social channels are being set up.</p>
+  <div class="contact">
+    <section>
+      <h3>Postal address</h3>
+      <address>
+        {site.address.map((l) => <>{l}<br /></>)}
+        <span class="soon">ward and city coming soon</span>
+        <!-- TODO(OSiV): full address (ward, district, city) and a Google Maps link. -->
+      </address>
+      <h3>Email</h3>
+      <p class="soon">coming soon</p>
+      <h3>Social</h3>
+      <p>Facebook · LinkedIn · TikTok <span class="soon">(coming soon)</span></p>
+    </section>
+    <section>
+      <h3>Directions</h3>
+      <p class="soon">Photos and directions to the office coming soon.</p>
+      <div class="thumbs">
+        <figure><div class="ph"><img src="/img/contact-office.jpg" alt="" loading="lazy" /></div><figcaption>placeholder</figcaption></figure>
+        <figure><div class="ph"><span class="ini">entrance</span></div><figcaption>coming soon</figcaption></figure>
+        <figure><div class="ph"><span class="ini">map</span></div><figcaption>coming soon</figcaption></figure>
+      </div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,83 @@
+name: "Economics, Culture &amp; Society"
+order: 2
+statement: "We use data and AI to help Vietnamese localities turn what they already have, their farm produce, crafts, heritage, landscapes and water, into lasting value, and we study how firms and policies make that happen."
+narrative:
+  - "Most of this work starts from a concrete request of a province or ward and becomes an applied project prepared with the provincial Department of Science and Technology. Our papers then examine the mechanisms behind it: how policy support turns into productivity, how tacit knowledge is transferred, and why firms adopt technology."
+  - "Our approach is data first: survey and standardise what exists, measure a baseline, run a pilot with the people who will use it, and only then add AI."
+image: "/img/projects/an-giang-rice.jpg"
+blurb: "innovation and digital transformation, policy, heritage, agriculture and tourism"
+themes:
+  - title: "Digital governance of agricultural value chains"
+    image: "/img/projects/an-giang-rice.jpg"
+    fig: false
+    question: "How can cooperatives and provinces know their supply, prove its origin and sell it at a fair price?"
+    text: "Digital raw-material zones for mango and pineapple, farm logbooks, batch traceability, supply–demand forecasting and a digital map of geographical indications."
+    projects:
+      - "an-giang-mango"
+      - "dong-thap-mango"
+      - "dong-thap-pineapple"
+      - "ip-map"
+    papers:
+      - "ip"
+  - title: "Tacit knowledge, heritage and AI"
+    image: "/img/projects/yellow-apricot.jpg"
+    fig: false
+    question: "How can knowledge that lives in artisans' hands be captured, verified and taught with AI?"
+    text: "Yellow-apricot craft in An Nhon Dong, absorptive capacity in ornamental-plant value chains, and digital heritage as public infrastructure."
+    projects:
+      - "yellow-apricot"
+    papers:
+      - "apricot"
+      - "tacit1"
+      - "tacit2"
+      - "heritage"
+  - title: "Smart and green tourism"
+    image: "/img/projects/mui-ne.jpg"
+    fig: false
+    question: "What makes a destination such as Mui Ne both greener and smarter, and how should it be governed?"
+    text: "Destination governance and digital transformation for Mui Ne, and an interactive, multilingual heritage tour at Po Sah Inu."
+    projects:
+      - "mui-ne-heritage"
+    papers:
+      - "muine1"
+      - "muine2"
+  - title: "Innovation, policy and firm behaviour"
+    image: "/img/papers/clp-framework.png"
+    fig: true
+    question: "Do firms adopt AI and new technology for value or for legitimacy, and does policy support raise productivity?"
+    text: "Symbolic AI adoption in Southeast Asian firms, policy support and productivity in Dong Thap, and the trade effects of the EU carbon border adjustment mechanism."
+    projects: []
+    papers:
+      - "clp"
+      - "dt_policy"
+      - "policy2"
+      - "cbam"
+  - title: "Water, energy and resources"
+    image: "/img/projects/farm-pond.jpg"
+    fig: false
+    question: "How can farms and industries use local resources better under a changing climate?"
+    text: "Rainwater coordination for farming in B'Lao, spent coffee grounds as solid biofuel, and AI robots for scrap sorting."
+    projects:
+      - "blao-rainwater"
+    papers:
+      - "coffee"
+      - "robot"
+topics:
+  - "digital agriculture"
+  - "traceability"
+  - "raw-material zones"
+  - "supply–demand forecasting"
+  - "geographical indications"
+  - "tacit knowledge"
+  - "SECI"
+  - "cultural heritage"
+  - "smart tourism"
+  - "destination governance"
+  - "AI adoption"
+  - "legitimacy"
+  - "public policy"
+  - "productivity"
+  - "carbon border adjustment"
+  - "rainwater management"
+  - "biofuel"
+  - "circular economy"

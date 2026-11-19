@@ -1,0 +1,30 @@
+---
+import type { Pub } from '../lib/content';
+interface Props { pub: Pub }
+const { pub } = Astro.props;
+const p = pub.data;
+const kinds = [p.kind === 'conference' ? 'conf' : 'journal', p.status === 'accepted' ? '' : 'review'].filter(Boolean).join(' ');
+const thumbClass = p.fig ? 'thumb fig' : 'thumb';
+---
+<li data-kind={kinds}>
+  {p.href ? (
+    <a class={thumbClass} href={p.href}>
+      {p.image ? <img src={p.image} alt="" loading="lazy" /> : <span class="tag">{p.tag}</span>}
+    </a>
+  ) : (
+    <div class={thumbClass}>
+      {p.image ? <img src={p.image} alt={p.title} class="zoomable" loading="lazy" /> : <span class="tag">{p.tag}</span>}
+    </div>
+  )}
+  <div class="text">
+    <h3>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h3>
+    <div class="au">{p.authors}</div>
+    <div class="ve">{p.venue}{p.group && <span class="grp">{p.group}</span>}</div>
+    {p.note && <p class="thsub" style="margin:4px 0 6px">{p.note}</p>}
+    {p.links.length > 0 && (
+      <ul class="options">
+        {p.links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+      </ul>
+    )}
+  </div>
+</li>

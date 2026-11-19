@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PubItem from '../../components/PubItem.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getPublications, getProjects } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({ params: { slug: p.id }, props: { project: p } }));
+}
+const { project } = Astro.props;
+const p = project.data;
+const allPubs = await getPublications();
+const papers = allPubs.filter((x) => p.papers.includes(x.id));
+const others = (await getProjects()).filter((x) => x.id !== project.id).slice(0, 3);
+const facts = [['Status', p.status], ['Partner', p.partner], ['Lead', p.lead], ['Timeline', p.time]].filter(([, v]) => v);
+---
+<Base title={p.title} description={p.sub} image={p.image}>
+  <div class="projectpage">
+    <p class="crumbs"><a href="/research/society/">Economics, Culture &amp; Society</a> / <a href="/projects/">Projects</a></p>
+    <h1>{p.title}</h1>
+    <p class="statement">{p.sub}</p>
+    <dl class="facts">{facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+    <section class="teaser"><img src={p.image} alt="" style={p.imagePosition ? `object-position:${p.imagePosition}` : undefined} /><span class="brl">illustrative photo</span></section>
+    <h2>Overview</h2>
+    {p.overview.map((t) => <p>{t}</p>)}
+    <h2>Goals</h2>
+    <ul class="blst">{p.goals.map((t) => <li>{t}</li>)}</ul>
+    <h2>Approach</h2>
+    <ol class="steps">{p.approach.map((t) => <li>{t}</li>)}</ol>
+    <h2>Expected outcomes</h2>
+    <ul class="blst">{p.outcomes.map((t) => <li>{t}</li>)}</ul>
+    {papers.length > 0 && (<><h2>Related papers</h2><ul class="pblt">{papers.map((x) => <PubItem pub={x} />)}</ul></>)}
+    <h2>Related projects</h2>
+    <ul class="tiles">{others.map((x) => <ProjectCard project={x} />)}</ul>
+    <p class="muted" style="font-size:13px;margin-top:30px">
+      Summary of the project proposal; scope, timeline and results may change after review by the provincial authorities.
+      Photo: Wikimedia Commons, see <a href="/img/projects/CREDITS.md">credits</a>.
+    </p>
+  </div>
+</Base>

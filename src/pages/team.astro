@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PersonCard from '../components/PersonCard.astro';
+import { getTeam } from '../lib/content';
+const team = await getTeam();
+---
+<Base title="Team" description="Meet the OSiV team.">
+  <h1>Team OSiV</h1>
+  <p class="intro">
+    Meet the team! OSiV has a research division, an operations division for media, events and partnerships,
+    and a quality checker who works across both. More members will be added as their profiles come in.
+  </p>
+  <section class="teamban">
+    <img src="/img/team-banner.jpg" alt="" />
+    <span class="brl">placeholder photo · team photo coming soon</span>
+  </section>
+  <ul class="people">{team.map((m) => <PersonCard member={m} />)}</ul>
+  <h2 class="grouph">Alumni</h2>
+  <p class="soon">coming soon</p>
+</Base>

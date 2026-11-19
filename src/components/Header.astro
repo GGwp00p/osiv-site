@@ -1,0 +1,39 @@
+---
+import { menu, site } from '../data/site';
+const path = Astro.url.pathname;
+const isActive = (href: string) => {
+  const base = href.split('#')[0];
+  if (base === '/') return path === '/';
+  return path.startsWith(base);
+};
+---
+<header id="topbar">
+  <div>
+    <a class="wordmark" href="/"><span class="wm">OS<i>i</i>V</span><span class="wl">{site.tagline}</span></a>
+    <button id="menubtn" aria-expanded="false" aria-controls="mnav">menu</button>
+    <nav id="mnav" aria-label="Main">
+      <ul>
+        {menu.map((m) => (
+          <li class:list={[isActive(m.href) && 'si', m.children && 'dd']}>
+            <a href={m.href} aria-current={isActive(m.href) ? 'page' : undefined}>{m.label}</a>
+            {m.children && (
+              <ul class="sub">
+                {m.children.map((c) => (
+                  <li><a href={c.href}>{c.label}<span>{c.sub}</span></a></li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+<script>
+  const btn = document.getElementById('menubtn');
+  const nav = document.getElementById('mnav');
+  btn?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(!!open));
+  });
+</script>

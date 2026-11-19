@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { icons, iconOrder, iconTitle } from '../data/icons';
+import { nameLink, initials } from '../lib/content';
+interface Props { member: CollectionEntry<'team'> }
+const m = Astro.props.member.data;
+const href = nameLink(m);
+const external = href && !m.profile;
+const links = iconOrder.filter((k) => m[k]);
+const cap = (x: string) => x.trim().charAt(0).toUpperCase() + x.trim().slice(1);
+const desc = [m.role, m.research, m.edu].filter(Boolean).map((x) => cap(x as string)).join('. ');
+---
+<li>
+  <div class="pic">
+    {m.photo ? (
+      <button class="zoom" type="button" aria-label={`Enlarge photo of ${m.name}`}><img src={m.photo} alt={m.name} loading="lazy" /></button>
+    ) : (
+      <span class="ini" aria-hidden="true">{initials(m.name)}</span>
+    )}
+  </div>
+  <span class="nm">{href ? <a href={href} target={external ? '_blank' : undefined} rel={external ? 'nofollow noopener' : undefined}>{m.name}</a> : m.name}</span>
+  {links.length > 0 && (
+    <div class="social">
+      {links.map((k) => <a href={m[k]} title={iconTitle[k]} target="_blank" rel="nofollow noopener" set:html={icons[k]} />)}
+    </div>
+  )}
+  <span class="rl">{desc}{desc && '.'}</span>
+</li>

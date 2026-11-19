@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+const areas = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Research" description="OSiV research areas: technology and engineering; economics, culture and society.">
+  <h1>Research</h1>
+  <p class="intro">Our work falls into two areas. Choose one to see its themes, papers and projects.</p>
+  <ul class="tiles two" style="margin-top:24px">
+    {areas.map((a) => (
+      <li>
+        <a class="nb" href={`/research/${a.id}/`}>
+          <div class="ph">
+            <img src={a.data.image} alt="" style={a.data.imagePosition ? `object-position:${a.data.imagePosition}` : 'object-position:40% 40%'} />
+            <div class="tlif"><b>{a.data.name}</b><span>{a.data.blurb}</span></div>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

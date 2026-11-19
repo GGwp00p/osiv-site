@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import Affiliations from '../components/Affiliations.astro';
+import { heroSlides, directions, homeIntro } from '../data/site';
+import { getPublications, getProjects, pubButtons } from '../lib/content';
+
+const pubs = await getPublications();
+const projects = await getProjects();
+const cards = [
+  ...pubs.filter((p) => p.data.homeOrder !== undefined).map((p) => ({
+    order: p.data.homeOrder!, venue: p.data.cardVenue ?? '', name: p.data.shortTitle ?? p.data.title, text: p.data.title, buttons: pubButtons(p.data),
+  })),
+  ...projects.filter((p) => p.data.homeOrder !== undefined).map((p) => ({
+    order: p.data.homeOrder!, venue: p.data.cardVenue ?? '', name: p.data.shortTitle ?? p.data.title, text: p.data.sub, buttons: [{ label: 'project', url: `/projects/${p.id}/` }],
+  })),
+].sort((a, b) => a.order - b.order);
+---
+<Base snap>
+  <!-- Screen 1: lab name, intro and the image carousel are visible together -->
+  <section class="screen hero">
+    <div class="hero-text">
+      <h1>OSiV: Research &amp; Innovation</h1>
+      <p class="intro">{homeIntro}</p>
+      <div class="cta">
+        <a class="btn" href="/research/">Our research</a>
+        <a class="btn" href="/publications/">Publications</a>
+      </div>
+    </div>
+    <div class="hero-slider" data-slider>
+      <div class="slides">
+        {heroSlides.map((s, i) => (
+          <figure class:list={['slide', s.fig && 'fig', i === 0 && 'act']}>
+            <a class="bnri" href={s.href}><img src={s.image} alt={s.title} style={s.position ? `object-position:${s.position}` : undefined} loading={i === 0 ? 'eager' : 'lazy'} /></a>
+            <figcaption>
+              <a class="cap" href={s.href}>{s.title}</a>{s.meta && ` (${s.meta})`}
+              <span class="capsub">{s.text}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <ul class="dots" aria-label="Choose slide">
+        {heroSlides.map((s, i) => <li class:list={[i === 0 && 'act']} data-dot={i}><span>{s.dot}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Screen 2: three research directions, caption on the image -->
+  <section class="screen" id="directions">
+    <h2 class="stkts">Research directions</h2>
+    <div class="tiles three tall">
+      {directions.map((d) => (
+        <article>
+          <a class="nb" href={d.href}>
+            <div class="ph">
+              <img src={d.image} alt="" loading="lazy" style={d.position ? `object-position:${d.position}` : undefined} />
+              <div class="tlif"><b>{d.title}</b><span>{d.sub}</span></div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Screen 3: papers and projects to appear -->
+  <section class="screen" id="recent">
+    <h2 class="stkts">Projects to appear and recent research</h2>
+    <div class="cards">
+      {cards.map((c) => (
+        <article>
+          <span class="venue">{c.venue}</span>
+          <h4>{c.name}</h4>
+          <span class="thsub">{c.text}</span>
+          <ul class="options">{c.buttons.map((b) => <li><a href={b.url}>{b.label}</a></li>)}</ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Screen 4: affiliations and ways to get involved -->
+  <section class="screen" id="subdesc">
+    <h2 class="stkts">Affiliations and collaborations</h2>
+    <p class="note">Our members and co-authors come from these institutions. We prepare projects together with provincial Departments of Science and Technology.</p>
+    <Affiliations />
+    <div class="getinvolved">
+      <a class="btn" href="/join/">Join us</a>
+      <a class="btn" href="/contact/">Contact</a>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Hero carousel: auto-advances, pauses on hover, dots switch slides.
+  document.querySelectorAll<HTMLElement>('[data-slider]').forEach((root) => {
+    const slides = root.querySelectorAll<HTMLElement>('.slide');
+    const dots = root.querySelectorAll<HTMLElement>('[data-dot]');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0;
+    let timer: number | undefined;
+    const show = (n: number) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('act', k === i));
+      dots.forEach((d, k) => d.classList.toggle('act', k === i));
+    };
+    const start = () => { if (still) return; window.clearInterval(timer); timer = window.setInterval(() => show(i + 1), 6000); };
+    dots.forEach((d, k) => d.addEventListener('click', () => { show(k); start(); }));
+    root.addEventListener('mouseenter', () => window.clearInterval(timer));
+    root.addEventListener('mouseleave', start);
+    start();
+  });
+</script>

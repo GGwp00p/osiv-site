@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../lib/content';
+const projects = await getProjects();
+const ongoing = projects.filter((p) => p.data.group === 'ongoing');
+const completed = projects.filter((p) => p.data.group === 'completed');
+---
+<Base title="Projects" description="Applied science and technology projects prepared by OSiV with provincial partners.">
+  <h1>Projects</h1>
+  <p class="intro">
+    Applied research projects prepared with provincial Departments of Science and Technology for the 2026 to 2030 period.
+    Status and outcomes are updated as each project moves forward.
+  </p>
+  <h2 id="ongoing">Ongoing</h2>
+  <ul class="tiles">{ongoing.map((p) => <ProjectCard project={p} />)}</ul>
+  <h2 id="completed">Completed</h2>
+  <ul class="tiles">{completed.map((p) => <ProjectCard project={p} />)}</ul>
+  <h2>Patents &amp; start-ups</h2>
+  <p class="soon">coming soon</p>
+  <p style="font-size:13px;margin-top:40px">Project photos are illustrative, from Wikimedia Commons; see <a href="/img/projects/CREDITS.md">image credits</a>.</p>
+</Base>
